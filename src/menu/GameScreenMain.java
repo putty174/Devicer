@@ -1,4 +1,4 @@
-package collisionalpha.menu;
+package menu;
 
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
