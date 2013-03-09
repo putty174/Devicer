@@ -1,0 +1,78 @@
+package villa.game.room.crop;
+
+import villa.game.room.Tile;
+
+import com.badlogic.gdx.graphics.Texture;
+
+public class Crop extends Tile
+{
+	/* Plant Characteristics */
+	private int maxHealth; // The maximum health of the crop.
+	private int health; //The health of the crop.
+	private int growth; //How grown the plant is.
+	
+	/* Constructor */
+	public Crop(int id) 
+	{
+		super(id);
+		// TODO Auto-generated constructor stub
+	}//END Crop
+
+	/* Plant Characteristics */
+	/**
+	 * Grows the plant.
+	 * 
+	 * @param amount how much the plant will crop.
+	 */
+	public final void grow(int amount)
+	{
+		this.growth += amount;
+	}//END grow
+	
+	/**
+	 * Returns the current growth of the crop.
+	 * 
+	 * @return the age or growth.
+	 */
+	public final int growth()
+	{
+		return this.growth;
+	}//END growth
+	
+	/**
+	 * Deals damage to the crop.
+	 * 
+	 * @param dmg the amount to hurt the crop.
+	 */
+	public final void damage(int dmg)
+	{
+		this.health -= dmg;
+	}//END damage
+	
+	/**
+	 * Heals the crop.
+	 * 
+	 * @param health
+	 */
+	public final void heal(int health)
+	{
+		if(this.health + health < this.maxHealth)
+		{
+			this.health += health;
+		}//fi
+		else
+		{
+			this.health = this.maxHealth;
+		}//esle
+	}//END heal
+	
+	/**
+	 * Returns the current health of the crop.
+	 * 
+	 * @return
+	 */
+	public final int health()
+	{
+		return this.health;
+	}//END health	
+}//END Crop

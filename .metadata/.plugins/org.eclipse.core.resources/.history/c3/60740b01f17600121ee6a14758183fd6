@@ -1,0 +1,76 @@
+package collisionalpha.game.objects;
+
+import com.badlogic.gdx.math.Vector2;
+
+public class MovementVector
+{
+	/* Identification */
+	private GameObject affectingObject;
+	private int id;
+	
+	/* Movement Vector */
+	private float speed;
+	private double angle; //In degrees.
+	private float maxSpeed;
+	private float acceleration;
+	
+	/* Timer */
+	private boolean isDone = false;
+	private float time; //In seconds.
+	
+	/* Movement */
+	/**
+	 * Returns the velocity vector.
+	 * @return the velocity vector
+	 */
+	public Vector2 getV()
+	{
+		return new Vector2(this.getVx(), this.getVy());
+	}//END getV
+	
+	/**
+	 * Returns the x component of the velocity.
+	 * @return the x component
+	 */
+	public float getVx()
+	{
+		double a = this.angle * Math.PI / 180;
+		return (float)(this.speed * Math.cos(a));
+	}//END getVx
+
+	/**
+	 * Returns the y component of the velocity.
+	 * @return the y component
+	 */
+	public float getVy()
+	{
+		double a = this.angle * Math.PI / 180;
+		return (float)(this.speed * Math.sin(a));
+	}//END getVy
+	
+	/* Time */
+	public final boolean isDone()
+	{
+		return this.isDone;
+	}//END isDone
+	
+	/* Update */
+	public void update(float dt)
+	{
+		// Update Speed
+		this.speed += this.acceleration;
+		if(this.speed >= this.maxSpeed)
+		{
+			this.speed = this.maxSpeed;
+		}//fi
+		
+		//Update Time
+		this.time -= dt;
+		if(this.time <= 0)
+		{
+			this.isDone = true;
+		}//fi
+	}//END update
+}//END MovementVector
+
+//EOF

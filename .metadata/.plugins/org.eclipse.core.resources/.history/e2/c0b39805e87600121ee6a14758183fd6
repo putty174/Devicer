@@ -1,0 +1,40 @@
+package collisionalpha.game.objects;
+
+import com.badlogic.gdx.math.Vector2;
+
+public class MovementVector
+{
+	private GameObject affectingObject;
+	private float speed;
+	private double angle; //In degrees.
+	private float maxSpeed;
+	private float acceleration;
+	
+	public Vector2 getV()
+	{
+		return new Vector2();
+	}//END getV
+	
+	public float getVx()
+	{
+		double a = this.angle * Math.PI / 180;
+		return (float)(this.speed * Math.cos(a));
+	}//END getVx
+	
+	public float getVy()
+	{
+		double a = this.angle * Math.PI / 180;
+		return (float)(this.speed * Math.sin(a));
+	}//END getVy
+	
+	/* Update */
+	public void update(float dt)
+	{
+		// Update Speed
+		this.speed += this.acceleration;
+		if(this.speed >= this.maxSpeed)
+		{
+			this.speed = this.maxSpeed;
+		}//fi
+	}//END update
+}

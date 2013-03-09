@@ -1,0 +1,7 @@
+package collisionalpha.game.objects.attributes;
+
+public class StandardAttributes
+{
+	public float current;
+	public float max;
+}//END class StandardAttributes

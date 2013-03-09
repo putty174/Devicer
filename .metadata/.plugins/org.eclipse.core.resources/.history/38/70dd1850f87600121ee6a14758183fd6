@@ -1,0 +1,123 @@
+package collisionalpha.game.objects;
+
+import com.badlogic.gdx.math.Vector2;
+
+public class MovementVector
+{
+	/* Identification */
+	private GameObject affectingObject;
+	private int id;
+	
+	/* Movement Vector */
+	private float speed;
+	private double angle; //In degrees.
+	private float deceleration;
+	
+	/* Timer */
+	private boolean isDone = false;
+	
+	/* Constructor */
+	
+	/**
+	 * Creates a vector that controls movement.
+	 * 
+	 * @param affectingObject the object applying the force
+	 * @param id the id of the force
+	 * @param angle the direction of the movement
+	 * @param speed the speed
+	 * @param deceleration the deceleration
+	 */
+	public MovementVector(GameObject affectingObject, int id, double angle, float speed, float deceleration)
+	{
+		this.affectingObject = affectingObject;
+		this.id = id;
+		this.angle = angle;
+		this.speed = speed;
+		this.deceleration = deceleration;
+	}//END MovementVector
+
+	/* Identification */	
+	/**
+	 * Reapplies the movement vector. Speed is given instantaneously.
+	 * 
+	 * @param angle the direction of the movement
+	 * @param speed the speed
+	 * @param deceleration the deceleration
+	 */
+	public void reapply(GameObject affectingObject, int id, double angle, float speed, float deceleration)
+	{
+		this.affectingObject = affectingObject;
+		this.id = id;
+		this.angle = angle;
+		this.speed = speed;
+		this.deceleration = deceleration;	
+	}//END reapply
+	
+	/**
+	 * @return the object causing the movement vector
+	 */
+	public final GameObject getAffectingObject()
+	{
+		return this.affectingObject;
+	}//END getAffectingObject
+	
+	/**
+	 * @return the id of the movement vector
+	 */
+	public final int getID()
+	{
+		return this.id;
+	}//END getID
+	
+	/* Movement */
+	/**
+	 * Returns the velocity vector.
+	 * @return the velocity vector
+	 */
+	public Vector2 getV()
+	{
+		return new Vector2(this.getVx(), this.getVy());
+	}//END getV
+	
+	/**
+	 * Returns the x component of the velocity.
+	 * @return the x component
+	 */
+	public float getVx()
+	{
+		double a = this.angle * Math.PI / 180;
+		return (float)(this.speed * Math.cos(a));
+	}//END getVx
+
+	/**
+	 * Returns the y component of the velocity.
+	 * @return the y component
+	 */
+	public float getVy()
+	{
+		double a = this.angle * Math.PI / 180;
+		return (float)(this.speed * Math.sin(a));
+	}//END getVy
+	
+	/* Done */
+	/**
+	 * @return whether or not the vector is ready to be deleted. 
+	 */
+	public final boolean isDone()
+	{
+		return this.isDone;
+	}//END isDone
+	
+	/* Update */
+	public void update(float dt)
+	{
+		this.speed -= this.deceleration;
+		if(this.speed <= 0)
+		{
+			this.speed = 0;
+			this.isDone = true;
+		}//fi		
+	}//END update
+}//END MovementVector
+
+//EOF

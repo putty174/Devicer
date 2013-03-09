@@ -1,0 +1,49 @@
+package villa.game.room;
+
+import villa.game.draw.GameImage;
+
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
+public class Tile
+{
+	/* Identifier */
+	private int tileID;
+	
+	/* Image */
+	protected GameImage image; //The image of the tile.
+	
+	/* Construction */
+	/**
+	 * Creates a tile.
+	 * 
+	 * @param id the tile identifier
+	 * @param image the image
+	 * @param srcWidth the width of the source
+	 * @param srcHeight the height of the source
+	 */
+	public Tile(int id)
+	{
+		this.tileID = id;
+		this.image = new GameImage(image, srcWidth, srcHeight, dstWidth, dstHeight);
+	}//END Tile
+	
+	/* ID */
+	public final int getID()
+	{
+		return this.tileID;
+	}//END getID
+	
+	/* Render */
+	/**
+	 * Renders the tile to the screen.
+	 * 
+	 * @param batch used for drawing.
+	 */
+	public void render(SpriteBatch batch, int x, int y, float scalar)
+	{
+		this.image.render(batch, x, y, scalar);
+	}//END render
+}//END Tile
+
+//EOF

@@ -1,0 +1,584 @@
+package uci.vgdc.team4.entities;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+
+import uci.vgdc.team4.entities.actions.ActionQueue;
+
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+
+public class Entity
+{
+	/* Identification */
+	private int objectID; //Indicates the type of object this object is.
+	
+	/* Hitbox */
+	protected float hitWidth, hitHeight; //The width and height of the hitbox.
+	
+	/* Drawing */
+	protected Sprite sprite;
+	protected int srcWidth, srcHeight; //The size of the sprite to draw.
+	protected float drawWidth, drawHeight; //The size of the image to be drawn.
+	private float orientation = 0; //How the image is oriented when drawn (in degrees).
+	
+	/* Position and Movement */
+	protected Vector2 position; //The x and y position of the object.
+	protected Vector2 velocity; //The velocity at which the object is moving at.
+	
+	/* Physics */
+	protected float mass; //How massive the object is.
+	protected float friction; //The amount the velocity decelerates after each update.
+	
+	/* Collisions */
+	protected boolean isSolid;
+	protected int[] colliders;
+	protected ArrayList<Entity> entityColliders;
+	
+	/* Actions */
+	protected ActionQueue action_queue = new ActionQueue();
+	
+	/* Constructors */	
+	/**
+	 * Constructs an object for a game.
+	 * 
+	 * @param objcetID the identifier for the object
+	 * @param posX the x position of the object in space.
+	 * @param posY the y position of the object in space.
+	 * @param mass how massive the object is
+	 * @param friction the magnitude of the friction force applied to the object
+	 * @param hitWidth the width of the hitbox
+	 * @param hitHeight the height of the hitbox
+	 * @param drawWidth the width that the object is drawn at.
+	 * @param drawHeight the height that the object is drawn at.
+	 * @param sprites the set of sprites to be used in drawing the object.
+	 * @param srcWidth the width of a sprite.
+	 * @param srcHeight the height of a sprite.
+	 */
+	public Entity(int objectID, float posX, float posY, float mass, float friction, float hitWidth, float hitHeight, float drawWidth, float drawHeight, Texture sprites, int srcWidth, int srcHeight)
+	{		
+		/* Position and Movement */
+		this.position = new Vector2(posX, posY);
+		this.velocity = new Vector2();
+		
+		/* Physics */
+		this.mass = mass;
+		this.friction = friction;
+
+		/* Hitbox */
+		this.hitWidth = hitWidth;
+		this.hitHeight = hitHeight;
+		
+		/* Drawing */
+		this.drawWidth = drawWidth;
+		this.drawHeight = drawHeight;
+		
+		/* Sprite */
+		this.srcWidth = srcWidth;
+		this.srcHeight = srcHeight;
+		this.sprite = new Sprite(sprites, srcWidth, srcHeight);
+	}//END GameObject
+	
+	/**
+	 * Constructs an object for a game.
+	 * 
+	 * @param objcetID the identifier for the object
+	 * @param posX the x position of the object in space
+	 * @param posY the y position of the object in space
+	 * @param mass how massive the object is
+	 * @param friction the magnitude of the friction force applied to the object
+	 * @param hitWidth the width of the hitbox
+	 * @param hitHeight the height of the hitbox
+	 * @param drawWidth the width that the object is drawn at
+	 * @param drawHeight the height that the object is drawn at
+	 * @param sprites the set of sprites to be used in drawing the object
+	 * @param srcWidth the width of a sprite
+	 * @param srcHeight the height of a sprite
+	 */
+	public Entity(int objectID, float posX, float posY, float mass, float friction, float hitWidth, float hitHeight, float drawWidth, float drawHeight, Texture sprites, int srcX, int srcY, int srcWidth, int srcHeight)
+	{		
+		/* Position and Movement */
+		this.position = new Vector2(posX, posY);
+		this.velocity = new Vector2();
+		
+		/* Physics */
+		this.mass = mass;
+		this.friction = friction;
+		
+		/* Hitbox */
+		this.hitWidth = hitWidth;
+		this.hitHeight = hitHeight;
+		
+		/* Drawing */
+		this.drawWidth = drawWidth;
+		this.drawHeight = drawHeight;
+		
+		/* Sprite */
+		this.srcWidth = srcWidth;
+		this.srcHeight = srcHeight;
+		this.sprite = new Sprite(sprites, srcX * srcWidth, srcY * srcHeight, srcWidth, srcHeight);
+	}//END GameObject
+	
+	/* Identification */
+	/**
+	 * @return the object's ID.
+	 */
+	public final int getID()
+	{
+		return this.objectID;
+	}//END getID
+	
+	/* Position and Movement */
+	//Position
+	/**
+	 * Sets the position.
+	 * 
+	 * @param x position on the x axis
+	 * @param y position on the y axis
+	 */
+	public final void set_position(float x, float y)
+	{
+		this.position.set(x, y);
+	}//END set_position
+	
+	/**
+	 * Sets the position.
+	 * 
+	 * @param pos the point to set the position at.
+	 */
+	public final void set_position(Vector2 pos)
+	{
+		this.position.set(pos);
+	}//END set_position
+	
+	/**
+	 * 
+	 * @return position on the x axis
+	 */
+	public final float get_positionX()
+	{
+		return this.position.x;
+	}//END get_positionX
+	
+	/**
+	 * 
+	 * @return position on the y axis
+	 */
+	public final float get_positionY()
+	{
+		return this.position.y;
+	}//END get_positionY
+	
+	/**
+	 * 
+	 * @return clone of the position vector
+	 */
+	public final Vector2 get_position()
+	{
+		return this.position.cpy();
+	}//END get_position
+	
+	//Movement
+	/**
+	 * Moves the object.
+	 * 
+	 * @param jumpX the amount to move on the x axis
+	 * @param jumpY the amount to move on the y axis
+	 */
+	public final void jump(float jumpX, float jumpY)
+	{
+		boolean move = true;
+		
+		Iterator<Entity> iter = this.entityColliders.iterator();
+		while(iter.hasNext())
+		{
+			Entity ent = iter.next();
+			
+			if(collide(ent) && ent.isSolid())
+			{
+				move = false;
+			}//fi
+		}//elihw
+		
+		if(move)
+		{
+			this.position.add(jumpX, jumpY);
+		}//fi
+	}//END jump
+	
+	/**
+	 * Moves the object.
+	 * 
+	 * @param jump the vector to be added to the current position vector
+	 */
+	public final void jump(Vector2 jump)
+	{
+		this.position.add(jump);
+	}//END jump
+	
+	// Velocity
+	/**
+	 * Sets the velocity of the object.
+	 * 
+	 * @param vX velocity on the x axis.
+	 * @param vY velocity on the y axis.
+	 */
+	public final void set_velocity(float vX, float vY)
+	{
+		this.velocity.set(vX, vY);
+	}//END set_velocity
+	
+	/**
+	 * Sets the velocity of the object.
+	 * 
+	 * @param v velocity vector
+	 */
+	public final void set_velocity(Vector2 v)
+	{
+		this.velocity.set(v);
+	}//END set_velocity
+	
+	/**
+	 * Adds velocity to the object.
+	 * 
+	 * @param vX velocity on the x axis
+	 * @param vY velocity on the y axis
+	 */
+	public final void add_velocity(float vX, float vY)
+	{
+		this.velocity.add(vX, vY);
+	}//END add_velocity
+	
+	/**
+	 * Adds velocity to the object.
+	 * 
+	 * @param v velocity vector
+	 */
+	public final void add_velocity(Vector2 v)
+	{
+		this.velocity.add(v);
+	}//END add_velocity
+	
+	/**
+	 * Subtracts velocity from the object.
+	 * 
+	 * @param vX velocity on the x axis
+	 * @param vY velocity on the y axis
+	 */
+	public final void sub_velocity(float vX, float vY)
+	{
+		this.velocity.sub(vX, vY);
+	}//END sub_velocity
+	
+	/**
+	 * Subtracts velocity from the object.
+	 * 
+	 * @param v
+	 */
+	public final void sub_velocity(Vector2 v)
+	{
+		this.velocity.sub(v);
+	}//END sub_velocity
+	
+	/**
+	 * 
+	 * @return velocity on the x axis
+	 */
+	public float get_velocityX()
+	{
+		return this.velocity.x;
+	}//END get_velocityX
+	
+	/**
+	 * 
+	 * @return velocity on the y axis
+	 */
+	public final float get_velocityY()
+	{
+		return this.velocity.y;
+	}//END get_velocityY
+	
+	/**
+	 * 
+	 * @return clone of the velocity vector
+	 */
+	public final Vector2 get_velocity()
+	{
+		return this.velocity.cpy();
+	}//END get_velocity
+	
+	/**
+	 * @return the magnitude of the velocity
+	 */
+	public final float get_vMagnitude()
+	{
+		return (float)Math.sqrt(this.velocity.x * this.velocity.x  + this.velocity.y * this.velocity.y);
+	}//END get_vMagnitude
+	
+	//Update
+	/**
+	 * Basic move update.
+	 * 
+	 * @param dt
+	 */
+	protected void update_move(float dt)
+	{
+		this.jump(this.velocity.x * dt, this.velocity.y * dt);
+	}//END update_move
+	
+	/**
+	 * @return direction of the velocity (in degrees)
+	 */
+	public final float get_velocityDirection()
+	{
+		return this.velocity.angle();
+	}//END get_velocityDirection
+	
+	/* Physics */
+	//Mass
+	/**
+	 * @return the mass of the object
+	 */
+	public final float get_mass()
+	{
+		return this.mass;
+	}//END get_mass
+	
+	//Momentum
+	/**
+	 * @return the momentum of the object (p = m*v)
+	 */
+	public final Vector2 get_momentum()
+	{
+		return new Vector2(this.velocity.cpy().mul(this.mass));
+	}//END add_momentum
+	
+	/**
+	 * Changes the velocity of the object based on momentum.
+	 * 
+	 * @param momentum the momentum of the colliding object.
+	 */
+	public final void momentum_collision(Vector2 momentum)
+	{
+		Vector2 tot_momentum = this.get_momentum().add(momentum);
+		this.velocity.add(tot_momentum.div(this.mass));
+	}//END momentum_collision
+	
+	/* Collision */
+	/**
+	 * @return whether or not the object is solid.
+	 */
+	public boolean isSolid()
+	{
+		return this.isSolid;
+	}//END isSolid
+	
+	private final boolean collide(Entity collider)
+	{
+		boolean collided = false;
+		
+		for(int i = 0; i < this.colliders.length; i++)
+		{
+			if(this.colliders[i] == collider.getID() )
+			{
+				if(isColliding(collider))
+				{
+					this.collision_behavior(collider);
+					collided = true;
+				}//fi
+			}//fi
+		}//rof
+		return collided;
+	}//END collide
+	
+	private boolean isColliding(Entity collider)
+	{
+		Rectangle self = new Rectangle(this.position.x - this.hitWidth, 
+				this.position.y - this.hitHeight,
+				this.hitWidth,
+				this.hitHeight);
+		Rectangle other = new Rectangle(collider.get_positionX() - collider.get_hitWidth(),
+				collider.get_positionY() - collider.get_hitHeight(),
+				collider.get_hitWidth(),
+				collider.get_hitHeight());
+		return self.contains(other);
+	}//END isColliding
+	
+	protected void collision_behavior(Entity collider)
+	{
+		//Override this otherwise basic.
+		
+	}
+	
+	//Update
+	/**
+	 * Applies friction to the object.
+	 * 
+	 * @param dt the difference in time
+	 */
+	protected void update_friction(float dt)
+	{
+		if(this.friction * dt >= this.get_vMagnitude())
+		{
+			this.set_velocity(0, 0);
+		}//fi
+		else
+		{
+			double fDir = (this.get_velocityDirection()) * Math.PI / 180;
+			float xComp = (float)(this.friction * Math.cos(fDir)) * dt;
+			float yComp = (float)(this.friction * Math.sin(fDir)) * dt;
+			this.velocity.sub(xComp, yComp);
+		}//esle
+	}//END update_physics	
+	
+	/* Drawing */
+	/**
+	 * Sets the image of the object to the indicated image in a larger image.
+	 * 
+	 * @param x the sprite column number.
+	 * @param y the sprite row number.
+	 */
+	protected final void set_sprite(int x, int y)
+	{
+		this.sprite.setRegion(x * this.srcWidth, y * this.srcHeight, this.srcWidth, this.srcHeight);
+	}//END set_sprite
+	
+	/**
+	 * Sets the size of the of what to draw on the screen.
+	 * 
+	 * @param width the width of the object that will be drawn
+	 * @param height the height of the object that will be drawn
+	 */
+	public final void set_drawSize(float width, float height)
+	{
+		this.drawWidth= width;
+		this.drawHeight = height;
+	}//END set_drawSize
+	
+	/** 
+	 * @return the height of the drawn sprite
+	 */
+	public final float getDrawHeight()
+	{
+		return this.drawHeight;
+	}//END getDrawHeight
+	
+	/**
+	 * @return the width of the drawn sprite
+	 */
+	public final float getDrawWidth()
+	{
+		return this.drawWidth;
+	}//END getDrawWidth
+	
+	/**
+	 * Sets the facing angle of the object.
+	 * 
+	 * @param degrees facing angle.
+	 */
+	public final void set_orientation(float degrees)
+	{
+		this.orientation = degrees;
+	}//END set_orientation
+	
+	/**
+	 * Renders the object to the screen.
+	 * 
+	 * @param spritebatch used to render this object to the screen.
+	 */
+	public final void render(SpriteBatch spritebatch)
+	{
+		this.sprite.setOrigin(this.drawWidth/2, this.drawHeight/2);
+		this.sprite.setSize(this.drawWidth,this.drawHeight);
+		this.sprite.setRotation(this.orientation);
+		this.sprite.setPosition(this.position.x - this.drawWidth/2, this.position.y - this.drawHeight/2);
+		this.sprite.draw(spritebatch);
+	}//END render
+	
+	/* Update */
+	/**
+	 * Updates the object.
+	 * 
+	 * @param dt the time passed between the current cycle and the last cycle
+	 */
+	public void update(float dt)
+	{
+		this.action_queue.act(this);
+		this.update_move(dt);
+		this.update_friction(dt);
+	}//END update
+	
+	/* Collision */
+	/**
+	 * Sets the collision area of the hitbox.
+	 * 
+	 * @param width the width of the hitbox
+	 * @param height the height of the hitbox
+	 */
+	public final void set_hitbox(float width, float height)
+	{
+		this.hitHeight = height;
+		this.hitWidth = width;
+	}//END set_hitbox
+	
+	/**
+	 * @return the width of the hitbox
+	 */
+	public final float get_hitWidth()
+	{
+		return this.hitWidth;
+	}//END get_hitWidth
+	
+	/**
+	 * @return the height of the hitbox
+	 */
+	public final float get_hitHeight()
+	{
+		return this.hitHeight;
+	}//END get_hitHeight
+	
+	/* Touch */
+	/**
+	 * Detects if the object has been touched and does something based on that.
+	 * 
+	 * @param x the x value of where the user touched
+	 * @param y the y value of where the user touched
+	 */
+	public final void touch(float x, float y)
+	{
+		if(this.isTouched(x, y))
+		{
+			this.behavior_touch();
+		}//fi
+	}//END touch
+	
+	private boolean isTouched(float x, float y)
+	{
+		//If point is in the object's hitbox
+		if(
+			(x >= this.position.x - this.hitWidth/2) && (x <= this.position.x + this.hitWidth/2)
+			&& (y >= this.position.y - this.hitHeight/2) && (y <= this.position.y + this.hitHeight/2)
+		)
+			{
+				return true;
+			}//fi
+		//else...
+		return false;
+	}//END isTouched
+	
+	/**
+	 * The behavior when this object has been touched or clicked.
+	 */
+	protected void behavior_touch()
+	{
+		//TODO TEST
+		System.out.println("Can't touch " + this + "!");
+		//Override this function.
+	}//END behavior_touched
+}//END class GameObject
+
+//EOF

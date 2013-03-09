@@ -1,0 +1,6 @@
+package collisionalpha.game.room;
+
+public class Spawner
+{
+	private ;
+}//END class Spawner

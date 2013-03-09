@@ -1,0 +1,53 @@
+package villa.loaders;
+
+import java.io.File;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Scanner;
+
+public class TextRoomLoader
+{
+	public static void main(String[] args)
+	{
+		load("data/rooms/test/testroom_01.dat");
+	}
+	
+	public static void load(String roompath)
+	{
+		HashSet<String> commands = null;
+		try
+		{
+			Scanner in = new Scanner(new File(roompath));
+			commands = getCommands(in);
+			in.close();
+		}
+		catch (Exception e)
+		{
+			System.err.println(e);
+		}
+		Iterator<String> iter = commands.iterator();
+		while(iter.hasNext())
+		{
+			System.out.println(iter.next());
+		}//elihw
+	}
+	
+	private static HashSet<String> getCommands(Scanner in)
+	{
+		HashSet<String> commands = new HashSet<String>();
+		
+		in.useDelimiter(";");
+		while(in.hasNext())
+		{
+			System.out.println(in.hasNext());
+			String command = in.next();
+			command = command.replaceAll("\\s", "");
+			commands.add(command);
+		}//elihw
+		System.out.println(in.hasNext());
+		
+		return commands;
+	}//END getCommands
+}//END class TextRoomLoader
+
+//EOF

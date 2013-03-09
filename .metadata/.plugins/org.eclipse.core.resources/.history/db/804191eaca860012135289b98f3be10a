@@ -1,0 +1,49 @@
+package villa.game.room;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import villa.game.object.GameObject;
+
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
+public class Room
+{
+	//Tiles
+	private Area area;
+	
+	//Objects
+	private ArrayList<GameObject> objects;
+	
+	/* Constructor */
+	/**
+	 * Creates a room object that holds the information of the currently loaded area.
+	 * 
+	 * @param area the tiles in the area.
+	 */
+	public Room(Area area)
+	{
+		this.area = area;
+	}//END Room
+	
+	/* Render */
+	/**
+	 * Renders everything in the map
+	 * 
+	 * @param batch the spritebatch that is used to render images to the screen
+	 * @param scalar the scalar to resize the image to the right size
+	 */
+	public void render(SpriteBatch batch, float scalar)
+	{
+		//Render Tiles
+		this.area.render(batch, scalar);
+	}//END render
+	
+	/**
+	 * Renders all the objects in the room.
+	 */
+	private void render_objects()
+	{
+		Iterator<GameObject> iter = this.objects.iterator();
+	}//END render_objects
+}

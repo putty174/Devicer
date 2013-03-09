@@ -1,0 +1,52 @@
+package grimdark.game.objects;
+
+import grimdark.game.controls.Controllable;
+
+import com.badlogic.gdx.graphics.Texture;
+
+public class Player extends AnimatedObject implements Controllable
+{
+	/* Animation */
+	private static final int ANIMATION_IDLE = 0;
+	private static final int ANIMATION_MOVING = 1;
+	
+	/* Input */
+	@Override
+	public void input_touch(int x, int y, int pointer, int button)
+	{
+		this.set_animation(1);
+		float direction = (float)Math.atan2(y - this.position.y, x - this.position.x);
+		this.set_velocity((float)(200 * Math.cos(direction)), (float)(200 * Math.sin(direction)));
+		this.set_orientation((float)(direction * 180 / Math.PI));
+	}//END input_touch
+	
+	
+	/* Constructor */
+	/**
+	 * Constructs a player object for a game.
+	 * 
+	 * @param objcetID the identifier for the object
+	 * @param posX the x position of the object in space
+	 * @param posY the y position of the object in space
+	 * @param mass how massive the object is
+	 * @param friction the friction force applied to the object
+	 * @param hitWidth the width of the hitbox
+	 * @param hitHeight the height of the hitbox
+	 * @param drawWidth the width that the object is drawn at
+	 * @param drawHeight the height that the object is drawn at
+	 * @param sprites the set of sprites to be used in drawing the object
+	 * @param srcWidth the width of a sprite
+	 * @param srcHeight the height of a sprite
+	 */
+	public Player(int objectID, float posX, float posY, float mass, float friction, float hitWidth, float hitHeight, float drawWidth, float drawHeight,
+			Texture sprites, int srcWidth, int srcHeight)
+	{
+		super(objectID, posX, posY, mass, friction, hitWidth, hitHeight, drawWidth, drawHeight, sprites, srcWidth, srcHeight);
+		
+		/* Animations */
+		this.add_animation(0, 0, 16, 16, true); //Idle
+		this.add_animation(0, 1, 12, 20, true); //Moving
+	}//END Player
+}//END class Player
+
+//EOF

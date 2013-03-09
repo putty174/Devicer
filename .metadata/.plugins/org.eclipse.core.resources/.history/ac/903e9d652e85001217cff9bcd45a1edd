@@ -1,0 +1,14 @@
+package villa.game.object;
+
+import com.badlogic.gdx.math.Vector2;
+
+public class MobileObject extends GameObject
+{
+	private Vector2 velocity;
+	
+	public MobileObject(float x, float y, float hitWidth, float hitHeight)
+	{
+		super(x, y, hitWidth, hitHeight);
+		// TODO Auto-generated constructor stub
+	}
+}//END MobileObject

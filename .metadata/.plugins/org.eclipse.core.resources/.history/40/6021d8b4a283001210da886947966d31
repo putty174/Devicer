@@ -1,0 +1,75 @@
+package collisionalpha.game.objects;
+
+import java.util.ArrayList;
+
+import collisionalpha.game.GameMain;
+import collisionalpha.game.controls.GameTimer;
+import collisionalpha.game.room.Room;
+
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
+
+public class Device extends GameObject {
+
+	private GameTimer timer;
+	private Texture exp_sprites;
+	private Room room;
+	
+	public Device(float posX, float posY, Texture sprites, Room room, Texture exp_sprites)
+	 {
+		super(
+				1, //ID
+				posX, posY, //Position
+				1, //Mass
+				400, //Friction
+				58, 58, //Hit Height and Width
+				0, 0, //Hit x and y offset
+				null, //Colliders
+				true, //Solid or not
+				60, //Touch Radius
+				true, //Touchable
+				64, 64, //Draw width and height
+				sprites, //Spritesheet
+				64, 64, //srcwidth and height
+				100 //hp
+				);
+		
+		this.exp_sprites = exp_sprites;
+		this.screenBound = true;
+		this.room = room;
+		this.timer = new GameTimer(10);
+	}//END Device
+	
+	@Override
+	public void behavior_collision(GameObject collider)
+	{
+		if(collider.isSolid)
+		{
+			double direction = Math.atan2(this.get_positionY() - collider.get_positionY(),
+					this.get_positionX() - collider.get_positionX());
+			float xComp = (float)(30 * collider.get_mass() / this.get_mass() * Math.cos(direction));
+			float yComp = (float)(30 * collider.get_mass() / this.get_mass() *  Math.sin(direction));
+			this.add_velocity(xComp, yComp);
+		}//fi
+	}//END behavior_collision
+	
+	@Override
+	public void update(float dt, ArrayList<GameObject> objects) {
+		
+		if(this.getHp() == 0){
+			return;
+		}
+		
+		XP exp = new XP(this.get_positionX(), this.get_positionY(), this.exp_sprites);
+		
+		this.timer.update_timer(dt);
+		if(this.timer.isDone())
+		{
+			this.room.spawn_object(exp);
+		}//fi
+		
+		super.update(dt, objects);
+	}
+
+}

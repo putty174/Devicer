@@ -1,0 +1,53 @@
+package collisionalpha.game.objects.actions;
+
+import grimdark.game.objects.GameObject;
+
+public class Attack extends Action
+{
+	private GameObject target; //The object the attacking object is attacking.
+	private int attackType; //The kind of attack it is.
+	private float attackRange; //The range of the attack.
+	
+	/* Constructor */
+	/**
+	 * Creates a command telling an object to attack another object.
+	 * 
+	 * @param target the target of the attacker
+	 * @param attackType the type of attack being used
+	 * @param attackRange the range of the attack
+	 */
+	public Attack(GameObject target, int attackType, float attackRange)
+	{
+		super(2);
+		this.target = target;
+		this.attackType = attackType;
+		this.attackRange = attackRange;
+	}//END Attack
+	
+	/* Act */
+	@Override
+	public void act(GameObject self)
+	{
+		if(
+				(self.get_positionX() >= this.target.get_positionX() - this.attackRange) && (self.get_positionX() <= this.target.get_positionX() + this.attackRange)
+				&&
+				(self.get_positionY() >= this.target.get_positionY() - this.attackRange) && (self.get_positionY() <= this.target.get_positionY() + this.attackRange)
+			)
+		{
+			//TODO Different things for different things.
+				
+			float direction = (float)Math.atan2(this.target.get_positionY()  - self.get_positionY(), this.target.get_positionX()  - self.get_positionX());
+			target.set_velocity((float)(400 * Math.cos(direction)), (float)(400 * Math.sin(direction)));
+		
+			this.terminate();
+		}//fi
+		else
+		{
+			//TODO Complicate
+			float direction = (float)Math.atan2(this.target.get_positionY()  - self.get_positionY(), this.target.get_positionX()  - self.get_positionX());
+			self.set_velocity((float)(200 * Math.cos(direction)), (float)(200 * Math.sin(direction)));
+		}//esle
+	}//END act
+}//END class Attack
+
+//EOF

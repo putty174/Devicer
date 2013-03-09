@@ -1,0 +1,29 @@
+package uci.vgdc.team4;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import uci.vgdc.team4.entities.Entity;
+
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
+public class GameScreen
+{
+	private ArrayList<Entity> entities = new ArrayList();
+	
+	public void add_entity(Entity e)
+	{
+		this.entities.add(e);
+	}
+	
+	public void render(SpriteBatch batch)
+	{
+		Iterator<Entity> iter = this.entities.iterator();
+		while(iter.hasNext())
+		{
+			Entity ent = iter.next();
+			
+			ent.render(batch);
+		}
+	}
+}

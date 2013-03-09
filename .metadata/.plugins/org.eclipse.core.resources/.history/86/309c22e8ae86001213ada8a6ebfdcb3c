@@ -1,0 +1,29 @@
+package villa.game.object;
+
+import java.util.ArrayList;
+
+import com.badlogic.gdx.math.Vector2;
+
+public class MobileObject extends GameObject
+{
+	private Vector2 velocity;
+	
+	/**
+	 * Creates an object for the game.
+	 * 
+	 * @param x the x starting position
+	 * @param y the y starting position
+	 * @param hitWidth the width of the hitbox
+	 * @param hitHeight the height of the hitbox
+	 */
+	public MobileObject(float x, float y, float hitWidth, float hitHeight)
+	{
+		super(x, y, hitWidth, hitHeight);
+	}//END MobileObject
+	
+	/* Movement */
+	private void jump(ArrayList<GameObject> colliders, float x, float y)
+	{
+		
+	}//END jump
+}//END MobileObject

@@ -1,0 +1,12 @@
+package villa.game.room;
+
+public class Room
+{
+	private Area area;
+	
+	/* Constructor */
+	public Room(Area area)
+	{
+		this.area = area;
+	}//END Room
+}

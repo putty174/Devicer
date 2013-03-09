@@ -1,0 +1,26 @@
+package villa.game.draw;
+
+import java.util.ArrayList;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+
+public class ImageManager
+{
+	ArrayList<Texture> images;
+	
+	/**
+	 * Loads images, assigning an image ID starting from 0 based on
+	 * the order the images where added.
+	 * 
+	 * @param path the path(s) of the images to add.
+	 */
+	public void load_image(String... path)
+	{
+		for(int i = 0; i < path.length; i++)
+		{
+			Texture image = new Texture(Gdx.files.internal(path[i]));
+			this.images.add(image);
+		}//rof
+	}//END load_image
+}

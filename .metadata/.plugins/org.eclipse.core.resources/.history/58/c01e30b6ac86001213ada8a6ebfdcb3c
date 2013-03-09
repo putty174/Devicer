@@ -1,0 +1,185 @@
+package villa.game.object;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import villa.game.draw.GameImage;
+
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+
+public class GameObject
+{
+	/* Position */
+	private Vector2 position;
+	
+	/* Collision */
+	private boolean isSolid = false;
+	
+	private float[] hitbox = {
+		0,	//Width
+		0	//Height
+	};
+	
+	/* Image */
+	private GameImage image;
+	
+	protected ArrayList<GameObject> collidedList = new ArrayList<GameObject>(); //Measure to stop repeat collisions in the same cycle.
+	
+	/* Constructor */
+	/**
+	 * Creates an object for the game.
+	 * 
+	 * @param x the x starting position
+	 * @param y the y starting position
+	 * @param hitWidth the width of the hitbox
+	 * @param hitHeight the height of the hitbox
+	 */
+	public GameObject(float x, float y, float hitWidth, float hitHeight)
+	{
+		this.position = new Vector2(x,y);
+		this.hitbox[0] = hitWidth;
+		this.hitbox[1] = hitHeight;
+	}//END GameObject
+	
+	/* Position */
+	/** 
+	 * @return the x position of the object
+	 */
+	public final float getPosX()
+	{
+		return this.position.x;
+	}//END getPosX
+	
+	/**
+	 * @return the y position of the object
+	 */
+	public final float getPosY()
+	{
+		return this.position.y;
+	}//END getPosY
+	
+	/**
+	 * @return a copy of the position vector
+	 */
+	public final Vector2 getPos()
+	{
+		return this.position.cpy();
+	}//END getPos
+	
+	/**
+	 * Sets the position of the object.
+	 * 
+	 * @param x the x position you want the object to be at
+	 * @param y the y position you want the object to be at
+	 */
+	public final void setPos(float x, float y)
+	{
+		this.position.set(x, y);
+	}//END setPos
+	
+	/* Collision */
+	//Hitbox
+	public final float getHitWidth()
+	{
+		return this.hitbox[0];
+	}//END getHitWidth
+	
+	public final float getHitHeight()
+	{
+		return this.hitbox[1];
+	}//ENG getHitHeight
+	
+	//Collision
+	/**
+	 * @return whether or not this object is solid.
+	 */
+	public final boolean isSolid()
+	{
+		return this.isSolid;
+	}//END isSolid
+	
+	/**
+	 * Returns whether or the collider object and this object are colliding.
+	 * 
+	 * @param collider the object that may or may not colliding
+	 * @return whether or not the collision occurred
+	 */
+	private final boolean hasCollided(GameObject collider)
+	{
+		Rectangle selfBox = new Rectangle(
+			this.getPosX(), this.getPosY(), //Position
+			this.getHitWidth(), this.getHitWidth() //Hitbox width and height
+		);
+		
+		Rectangle colliderBox = new Rectangle(
+			collider.getPosX(), collider.getPosY(), //Position
+			collider.getHitWidth(), collider.getHitWidth() //Hitbox width and height
+		);
+		
+		return Intersector.intersectRectangles(selfBox, colliderBox);
+	}//END hasCollided
+	
+	/**
+	 * Checks if objects have collided together and applies the behavior between them if they do.
+	 * 
+	 * @param colliders the list of objects that can be collided with
+	 * @return whether or not this object has collided with a solid object
+	 */
+	protected final boolean collide(ArrayList<GameObject> colliders)
+	{
+		boolean solidCollision = false;
+		Iterator<GameObject> iter = colliders.iterator();
+		while(iter.hasNext())
+		{
+			GameObject collider = iter.next();
+			
+			if(this.hasCollided(collider))
+			{
+				if(this.isSolid() && collider.isSolid())
+				{
+					solidCollision = true;
+				}//fi
+				
+				if(!this.collidedList.contains(collider))
+				{
+					this.behavior_collision(collider);
+					collider.behavior_collision(this);
+					this.collidedList.add(collider);
+					collider.collidedList.add(collider);
+				}//fi
+			}//fi
+		}//elihw
+		
+		return solidCollision;
+	}//END collide
+	
+	/* Behavior */
+	/**
+	 * Causes the object to act in a certain way when colliding with other objects.
+	 * 
+	 * @param collider the object colliding with this
+	 */
+	protected final void behavior_collision(GameObject collider)
+	{
+		//Override this function.
+	}//END behavior_collision
+	
+	/** Drawing **/
+	//Render
+	/**
+	 * Renders the object to the screen.
+	 * 
+	 * @param batch the sprite batch used for drawing
+	 * @param scalar the scalar that is used to scale objects to the right proportions
+	 */
+	public void render(SpriteBatch batch, float scalar)
+	{
+		this.image.render(batch, this.getPosX(), this.getPosY(), scalar);
+	}//END render
+	
+	/** Update **/
+	public void update()
+}//END GameObject

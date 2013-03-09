@@ -1,0 +1,48 @@
+package collisionalpha.game.objects.actions;
+
+import collisionalpha.game.objects.GameObject;
+
+public class Goto extends Action
+{
+	private static final float bounds = 5;
+	
+	private float x, y; //The coordinates of where to go.
+	
+	/* Constructor */
+	/**
+	 * An action that tells the object to move towards a point.
+	 * <p>
+	 * The ID of Goto is 1.
+	 * 
+	 * @param x
+	 * @param y
+	 */
+	public Goto(float x, float y)
+	{
+		super(1);
+		
+		this.x = x;
+		this.y = y;
+	}//END Goto
+	
+	/* Action */
+	@Override
+	public void act(GameObject self)
+	{
+		if(
+			(self.get_positionX() >= this.x - bounds) && (self.get_positionX() <= this.x + bounds)
+			&&
+			(self.get_positionY() >= this.y - bounds) && (self.get_positionY() <= this.y + bounds)
+		)
+		{
+			this.terminate();
+		}//fi
+		else
+		{
+			//TODO Complicate
+			float direction = (float)Math.atan2(y - self.get_positionY(), x - self.get_positionX()) * 180 / Math.PI;
+			self.add_movement(self, 0, direction, 200, 400);
+		}//esle
+	}//END act
+
+}

@@ -1,0 +1,49 @@
+package uci.vgdc.team4.entities.actions;
+
+import uci.vgdc.team4.entities.Entity;
+
+public class Goto extends Action
+{
+	private static final float bounds = 10;
+	
+	private float x, y; //The coordinates of where to go.
+	
+	/* Constructor */
+	/**
+	 * An action that tells the object to move towards a point.
+	 * <p>
+	 * The ID of Goto is 1.
+	 * 
+	 * @param x
+	 * @param y
+	 */
+	public Goto(float x, float y)
+	{
+		super(1);
+		
+		this.x = x;
+		this.y = y;
+	}//END Goto
+	
+	/* Action */
+	@Override
+	public void act(Entity self)
+	{
+		if(
+			(self.get_positionX() >= this.x - bounds) && (self.get_positionX() <= this.x + bounds)
+			&&
+			(self.get_positionY() >= this.y - bounds) && (self.get_positionY() <= this.y + bounds)
+		)
+		{
+			self.set_velocity(0,0);
+			this.terminate();
+		}//fi
+		else
+		{
+			//TODO Complicate
+			float direction = (float)Math.atan2(y - self.get_positionY(), x - self.get_positionX());
+			self.set_velocity((float)(200 * Math.cos(direction)), (float)(200 * Math.sin(direction)));
+		}//esle
+	}//END act
+
+}

@@ -1,0 +1,69 @@
+package collisionalpha.game.room;
+
+
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import collisionalpha.game.controls.Controllable;
+import collisionalpha.game.objects.GameObject;
+
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
+public class Room implements Controllable
+{
+	ArrayList<GameObject> objects = new ArrayList<GameObject>();
+
+	/* Object Management */
+	/**
+	 * Adds an object to the Room's list of objects.
+	 * 
+	 * @param obj the object to add
+	 */
+	public void add_object(GameObject obj)
+	{
+		this.objects.add(obj);
+	}//END add_object
+	
+	/* Input */
+	@Override
+	public void input_touch(int x, int y, int pointer, int button)
+	{
+		Iterator<GameObject> iter = this.objects.iterator();
+		while(iter.hasNext())
+		{
+			GameObject obj = iter.next();
+			obj.touch(x, y);
+		}//elihw
+		
+	}//END input_touch
+	
+	/* Update */
+	/**
+	 * Updates all the objects in the room.
+	 * 
+	 * @param dt the difference in time between this and the last cycle
+	 */
+	public void update(float dt)
+	{
+		//Update Objects
+		Iterator<GameObject> iter = this.objects.iterator();
+		while(iter.hasNext())
+		{
+			GameObject obj = iter.next();
+			obj.update(dt, this.objects);
+			obj.endUpdate();
+		}//elihw
+	}//END Update
+	
+	/* Draw */
+	public void render(SpriteBatch spritebatch)
+	{
+		//Render Objects
+		Iterator<GameObject> iter = this.objects.iterator();
+		while(iter.hasNext())
+		{
+			GameObject obj = iter.next();
+			obj.render(spritebatch);
+		}//elihw
+	}//END render
+}

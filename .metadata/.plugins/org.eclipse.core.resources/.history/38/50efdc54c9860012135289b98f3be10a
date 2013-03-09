@@ -1,0 +1,48 @@
+package villa.game.room;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+
+import villa.game.object.GameObject;
+
+public class ObjectsHolder
+{
+	private ArrayList<GameObject> objects = new ArrayList<GameObject>();
+	private HashSet<GameObject> spawn = new HashSet<GameObject>();
+	
+	/* Object Management */
+	/**
+	 * @return all the objects in the holder
+	 */
+	public ArrayList<GameObject> get_objects()
+	{
+		return this.objects;
+	}//END get_objects
+	
+	/**
+	 * Adds an object to the holder to later be spawned.
+	 * 
+	 * @param obj the object to add
+	 */
+	public void add_object(GameObject obj)
+	{
+		this.spawn.add(obj);
+	}//END add_obj
+
+	/**
+	 * Adds the objects from the spawn list to the main list.
+	 */
+	private void add()
+	{
+		Iterator<GameObject> iter = this.spawn.iterator();
+		while(iter.hasNext())
+		{
+			GameObject obj = iter.next();
+			this.objects.add(obj);
+			iter.remove();
+		}//elihw
+	}//END add
+	
+	/* Update */
+}

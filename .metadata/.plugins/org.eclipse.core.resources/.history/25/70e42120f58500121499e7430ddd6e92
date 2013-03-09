@@ -1,0 +1,79 @@
+package collisionalpha.game.objects;
+
+import java.util.ArrayList;
+
+import collisionalpha.game.objects.actions.Attack;
+import collisionalpha.game.objects.actions.Goto;
+import collisionalpha.game.objects.attributes.AttackAttributes;
+
+import com.badlogic.gdx.graphics.Texture;
+
+public class Enemy extends GameObject
+{
+	AttackAttributes attack = new AttackAttributes();
+	GameObject device;
+	public boolean stunned = false;
+	byte track;
+
+	public Enemy(GameObject device, int objectID, float posX, float posY, float mass,
+			float friction, float hitWidth, float hitHeight, float hitX,
+			float hitY, boolean isSolid, float touchRadius,
+			boolean isTouchable, float drawWidth, float drawHeight,
+			Texture sprites, int srcWidth, int srcHeight) {
+		super(objectID, posX, posY, mass, friction, hitWidth, hitHeight, hitX, hitY,
+				isSolid, touchRadius, isTouchable, drawWidth, drawHeight,
+				sprites, srcWidth, srcHeight, 2);
+		this.device = device;
+		/* Stats */
+		this.attack.damage = 1;
+		this.attack.power = 100;
+		this.attack.range = 50;
+		this.movement.speed = 100;
+		this.movement.acceleation = 10;
+		// TODO Auto-generated constructor stub
+	}
+
+	private boolean inBounds(){
+		float xDist = (this.get_positionX() - device.get_positionX());
+		float yDist = (this.get_positionY() - device.get_positionY());
+		if(Math.sqrt((xDist * xDist) + (yDist * yDist)) < 50){
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public void update(float dt, ArrayList<GameObject> objects)
+	{
+		super.update(dt, objects);
+		
+		if(getHp() == 0){
+			return;
+		}
+		
+		this.action_queue.clear();
+		if(!stunned)
+		{
+			this.action_queue.add_action(new Attack(device, movement, attack));
+		}//fi
+	}
+	
+	public void stun()
+	{
+		this.stunned = true;
+		this.action_queue.clear();
+	}
+	
+	@Override
+	public void behavior_collision(GameObject collider)
+	{
+		if(collider.isSolid)
+		{
+			double direction = Math.atan2(this.get_positionY() - collider.get_positionY(),
+					this.get_positionX() - collider.get_positionX());
+			float xComp = (float)(30 * collider.get_mass() / this.get_mass() * Math.cos(direction));
+			float yComp = (float)(30 * collider.get_mass() / this.get_mass() *  Math.sin(direction));
+			this.add_velocity(xComp, yComp);
+		}//fi
+	}//END behavior_collision
+}

@@ -1,0 +1,7 @@
+package uci.vgdc.team4;
+
+import java.util.ArrayList;
+
+public class GameScreen
+{
+}

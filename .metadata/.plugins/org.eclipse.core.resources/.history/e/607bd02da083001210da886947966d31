@@ -1,0 +1,5 @@
+package collisionalpha.game.controls;
+
+public class GameTimer {
+
+}

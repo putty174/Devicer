@@ -1,0 +1,5 @@
+package villa.game.object;
+
+public class MobileObject {
+
+}

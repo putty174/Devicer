@@ -1,0 +1,182 @@
+package collisionalpha.game.objects;
+
+import com.badlogic.gdx.math.Vector2;
+
+public class MovementVector
+{
+	/* Identification */
+	private GameObject affectingObject;
+	private int id;
+	
+	/* Movement Vector */
+	private float speed = 0;
+	private double angle; //In degrees.
+	private float maxSpeed;
+	private float acceleration;
+	private float deceleration;
+	
+	/* Timer */
+	private boolean doneAccelerating = false;
+	private boolean isDone = false;
+	private float time; //In seconds.
+	
+	/* Constructor */
+	/**
+	 * Creates a vector that controls movement.
+	 * 
+	 * @param affectingObject the object applying the force
+	 * @param id the id of the force
+	 * @param time the time in seconds before the movement vector stops applying acceleration
+	 * @param angle the direction of the movement
+	 * @param maxSpeed the maxSpeed
+	 * @param acceleration the acceleration
+	 * @param deceleration the deceleration
+	 */
+	public MovementVector(GameObject affectingObject, int id, float time, double angle, float maxSpeed, float acceleration, float deceleration)
+	{
+		this.time = time;
+		this.angle = angle;
+		this.maxSpeed = maxSpeed;
+		this.acceleration = acceleration;
+		this.deceleration = deceleration;
+	}//END MovementVector
+	
+	/**
+	 * Creates a vector that controls movement. Speed is given instantaneously.
+	 * 
+	 * @param affectingObject the object applying the force
+	 * @param id the id of the force
+	 * @param time the time in seconds before the movement vector stops applying acceleration
+	 * @param angle the direction of the movement
+	 * @param maxSpeed the maxSpeed
+	 * @param deceleration the deceleration
+	 */
+	public MovementVector(GameObject affectingObject, int id, float time, double angle, float maxSpeed, float deceleration)
+	{
+		this.time = time;
+		this.angle = angle;
+		this.maxSpeed = maxSpeed;
+		this.deceleration = deceleration;
+		this.doneAccelerating = true;
+	}//END MovementVector
+
+	/* Identification */
+	/**
+	 * Reapplies the movement vector.
+	 * 
+	 * @param time the time in seconds before the movement vector stops applying acceleration
+	 * @param angle the direction of the movement
+	 * @param maxSpeed the maxSpeed
+	 * @param acceleration the acceleration
+	 * @param deceleration the deceleration
+	 */
+	public void reapply(float time, double angle, float maxSpeed, float acceleration, float deceleration)
+	{
+		this.time = time;
+		this.angle = angle;
+		this.maxSpeed = maxSpeed;
+		this.acceleration = acceleration;
+		this.deceleration = deceleration;
+	}//END reapply
+	
+	/**
+	 * Reapplies the movement vector. Speed is given instantaneously.
+	 * 
+	 * @param time the time in seconds before the movement vector stops applying acceleration
+	 * @param angle the direction of the movement
+	 * @param maxSpeed the maxSpeed
+	 * @param deceleration the deceleration
+	 */
+	public void reapply(float time, double angle, float maxSpeed, float deceleration)
+	{
+		this.time = time;
+		this.angle = angle;
+		this.maxSpeed = maxSpeed;
+		this.deceleration = deceleration;
+		this.doneAccelerating = true;		
+	}//END reapply
+	
+	/**
+	 * @return the object causing the movement vector
+	 */
+	public final GameObject getAffectingObject()
+	{
+		return this.affectingObject;
+	}//END getAffectingObject
+	
+	/**
+	 * @return the id of the movement vector
+	 */
+	public final int getID()
+	{
+		return this.id;
+	}//END getID
+	
+	/* Movement */
+	/**
+	 * Returns the velocity vector.
+	 * @return the velocity vector
+	 */
+	public Vector2 getV()
+	{
+		return new Vector2(this.getVx(), this.getVy());
+	}//END getV
+	
+	/**
+	 * Returns the x component of the velocity.
+	 * @return the x component
+	 */
+	public float getVx()
+	{
+		double a = this.angle * Math.PI / 180;
+		return (float)(this.speed * Math.cos(a));
+	}//END getVx
+
+	/**
+	 * Returns the y component of the velocity.
+	 * @return the y component
+	 */
+	public float getVy()
+	{
+		double a = this.angle * Math.PI / 180;
+		return (float)(this.speed * Math.sin(a));
+	}//END getVy
+	
+	/* Time */
+	public final boolean isDone()
+	{
+		return this.isDone;
+	}//END isDone
+	
+	/* Update */
+	public void update(float dt)
+	{
+		// Update Speed
+		if(!this.doneAccelerating)
+			{
+			this.speed += this.acceleration;
+			if(this.speed >= this.maxSpeed)
+			{
+				this.speed = this.maxSpeed;
+			}//fi
+			
+			//Update Time
+			this.time -= dt;
+			if(this.time <= 0)
+			{
+				this.doneAccelerating = true;
+			}//fi
+		}//fi
+		else
+		{
+			this.speed -= this.deceleration;
+			if(this.speed <= 0)
+			{
+				this.isDone = true;
+			}//fi
+		}//esle
+		
+	}//END update
+}//END MovementVector
+
+//EOF

@@ -1,0 +1,5 @@
+package collisionalpha.game.objects;
+
+public class Enemy {
+
+}

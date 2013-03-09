@@ -1,0 +1,5 @@
+package villa.game.draw;
+
+public class ImageManager {
+
+}

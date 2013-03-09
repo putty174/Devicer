@@ -1,0 +1,8 @@
+package collisionalpha.game.room;
+
+import collisionalpha.game.controls.GameTimer;
+
+public class Spawner
+{
+	private GameTimer timer;
+}//END class Spawner

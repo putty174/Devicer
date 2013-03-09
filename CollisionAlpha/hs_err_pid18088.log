@@ -1,0 +1,50 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGBUS (0x7) at pc=0x6d351f60, pid=18088, tid=1745181504
+#
+# JRE version: 6.0_27-b27
+# Java VM: OpenJDK Server VM (20.0-b12 mixed mode linux-x86 )
+# Derivative: IcedTea6 1.12.3
+# Distribution: Ubuntu 12.04 LTS, package 6b27-1.12.3-0ubuntu1~12.04
+# Problematic frame:
+# 
+[error occurred during error reporting (printing problematic frame), id 0x7]
+
+# If you would like to submit a bug report, please include
+# instructions how to reproduce the bug and visit:
+#   https://bugs.launchpad.net/ubuntu/+source/openjdk-6/
+# The crash happened outside the Java Virtual Machine in native code.
+# See problematic frame for where to report the bug.
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x6d2d6c00):  JavaThread "LWJGL Application" [_thread_in_native, id=18111, stack(0x68005000,0x68056000)]
+
+siginfo:si_signo=SIGBUS: si_errno=0, si_code=2 (BUS_ADRERR), si_addr=0x6d351f60
+
+Registers:
+EAX=0x6d351f60, EBX=0x6edb1f80, ECX=0x6d2d6d20, EDX=0x6edb2800
+ESP=0x68054b5c, EBP=0x68054b94, ESI=0x6edb1f80, EDI=0x6d2d6c00
+EIP=0x6d351f60, EFLAGS=0x00010a03, CR2=0x6d351f60
+
+Top of Stack: (sp=0x68054b5c)
+0x68054b5c:   b35d764a 6d2d6d20 68054b9c 68054ba4
+0x68054b6c:   6e948450 68054ba4 68054b74 00000000
+0x68054b7c:   68054ba4 6edb2800 00000000 6edb1f80
+0x68054b8c:   00000000 68054ba4 68054bd0 b35cfee1
+0x68054b9c:   6edb27a0 b35d54b9 9f34acb0 00000031
+0x68054bac:   00000000 68054ba8 6edb1bfb 68054be4
+0x68054bbc:   6edb2800 6ee23024 6edb1c28 68054ba4
+0x68054bcc:   68054be4 68054c08 b35cfee1 00000000 
+
+Instructions: (pc=0x6d351f60)
+0x6d351f40:   8b 44 24 0c 8b 54 24 14 89 50 48 c3 8d 74 26 00
+0x6d351f50:   8b 44 24 0c d9 40 48 c3 90 90 90 90 90 90 90 90
+0x6d351f60:   53 83 ec 18 8b 44 24 20 8b 4c 24 28 e8 36 32 fd
+0x6d351f70:   ff 81 c3 83 c0 02 00 8b 10 89 4c 24 04 89 04 24 
+
+Register to memory mapping:
+
+EAX=

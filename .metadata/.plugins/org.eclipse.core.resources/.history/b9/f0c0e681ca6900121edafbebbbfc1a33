@@ -1,0 +1,6 @@
+package grimdark.game.controls;
+
+public interface Controllable
+{
+	public void input_touch(int x, int y, int pointer, int button);
+}//END interface Controllable

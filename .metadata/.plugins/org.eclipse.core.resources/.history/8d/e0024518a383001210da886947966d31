@@ -1,0 +1,176 @@
+package collisionalpha.game;
+
+import java.util.Random;
+
+import collisionalpha.game.controls.Controller;
+import collisionalpha.game.objects.Device;
+import collisionalpha.game.objects.Enemy;
+import collisionalpha.game.objects.Exp;
+import collisionalpha.game.objects.GameObject;
+import collisionalpha.game.objects.Player;
+import collisionalpha.game.room.Room;
+
+import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
+public class Game implements ApplicationListener
+{
+	float i = 0, j = 16;
+	//TODO Testing
+	Texture testure;
+	Texture testure2;
+	Texture testure3;
+	Texture testure4;
+	Texture testure5;
+	Texture backtest;
+	Player testobj;
+	Room testroom;
+	int[] testcolliders = {0,1,2};
+	float time = 0;
+	GameObject worldbox;
+	float rate = 2;
+	float wait = rate;
+	Random generator = new Random();
+	boolean gameIsOver;
+	GameOverState gos;
+	Exp exp;
+	Texture t;
+	/* Controls */
+	private Controller controller = new Controller();
+	
+	/* ApplicationListener */
+	@Override
+	public void create()
+	{
+		testure = new Texture(Gdx.files.internal("data/ness_walk.png"));
+		testure2 = new Texture(Gdx.files.internal("data/Sprite-example.png"));
+		testure3 = new Texture(Gdx.files.internal("data/greenball.png"));
+		testure4 = new Texture(Gdx.files.internal("data/Sprite-example.png"));
+		testure5 = new Texture(Gdx.files.internal("data/FritoLaySmall.png"));
+		backtest = new Texture(Gdx.files.internal("data/backgrounds/grass.png"));
+		t = new Texture(Gdx.files.internal("data/xp.png"));
+		testobj = new Player(0, 90, 90, 1, 10000, 32, 20, 0, -15, testcolliders, true, 60, true, 32, 50, testure, 32, 50);
+		gameIsOver = false;
+		testroom = new Room(backtest, testobj);
+		Device box = new Device(400,400,testure3, testroom, testure5);
+		worldbox = box;
+		GameObject blocker = new GameObject(10,200,200,1,300,64,64,0,0,testcolliders,true,60,true,64,64,testure2,64,64, 1);
+		GameObject enemy1 = new Enemy(box,3, 500, 400, 1f, 300, 32, 32, 0, 0, testcolliders, true, 60, true, 32, 32, testure4, 32, 32, exp);
+		GameObject enemy2 = new Enemy(box,3, 500, 500, 1f, 300, 32, 32, 0, 0, testcolliders, true, 60, true, 32, 32, testure4, 32, 32, exp);
+		GameObject enemy3 = new Enemy(box,3, 500, 600, 1f, 300, 32, 32, 0, 0, testcolliders, true, 60, true, 32, 32, testure4, 32, 32, exp);
+		GameObject enemy4 = new Enemy(box,3, 500, 300, 1f, 300, 32, 32, 0, 0, testcolliders, true, 60, true, 32, 32, testure4, 32, 32, exp);
+		GameObject enemy5 = new Enemy(box,3, 500, 200, 1f, 300, 32, 32, 0, 0, testcolliders, true, 60, true, 32, 32, testure4, 32, 32, exp);
+		gos = new GameOverState(backtest);
+		//exp = new Exp(box, testroom,  new Texture(Gdx.files.internal("data/xp.png")));
+		//testroom.add_object(exp);
+		testroom.add_object(box);
+
+		//testroom.add_object(enemy1);
+		//testroom.add_object(enemy2);
+		//testroom.add_object(enemy3);
+		//testroom.add_object(enemy4);
+		//testroom.add_object(enemy5);
+		
+		testroom.add_object(testobj);
+		
+		this.controller.add_controllable(testroom);
+		
+		Gdx.input.setInputProcessor(this.controller);
+	}//END create
+
+	@Override
+	public void dispose()
+	{
+		// TODO Auto-generated method stub
+		testure.dispose();
+		testure2.dispose();
+		testure3.dispose();
+		testure4.dispose();
+		testure5.dispose();
+		backtest.dispose();
+	}
+
+	@Override
+	public void pause() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	private GameObject addMonster()
+	{
+		boolean top = generator.nextBoolean();
+		boolean side = generator.nextBoolean();
+		float xSpawn = (top ? (side ? 0 : Gdx.graphics.getWidth()) : generator.nextInt(Gdx.graphics.getWidth()));
+		float ySpawn = (top ? generator.nextInt(Gdx.graphics.getHeight()) : (side ? 0 : Gdx.graphics.getHeight()));
+		GameObject enemy = new Enemy(worldbox,3, xSpawn, ySpawn, 0.001f, 300, 32, 32, 0, 0, 
+				testcolliders, true, 60, true, 32, 32, testure4, 32, 32, exp);
+		return enemy;
+	}
+	@Override
+	public void render() {
+		
+		if(gameIsOver){
+			gameIsOver = gos.update();
+			
+			SpriteBatch spritebatch = new SpriteBatch();
+			spritebatch.begin();
+			gos.render(spritebatch);
+			spritebatch.end();
+			spritebatch.dispose();
+			if(!gameIsOver){
+				create();
+				System.out.println("gets here");
+			}
+			else{
+				return;
+			}
+			
+		}
+		System.out.println("and here");
+		/* Get DT */
+		float dt = Gdx.graphics.getDeltaTime();
+		time += dt;
+		//System.out.println("Total Time: " + time);
+//		if (time > wait && testroom.monsterCount < 10)
+//		{
+//			System.out.println("New Enemy Spawned");
+//			wait = time + rate;
+//			testroom.add_object(addMonster());
+//		}
+		
+		/* Update */
+		gameIsOver = testroom.update(dt);
+		exp.update(dt);
+		
+		/* Render */
+		//Clear
+		Gdx.graphics.getGL20().glClearColor(1, 1, 1, 1);
+		Gdx.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+		
+		//Draw
+		SpriteBatch spritebatch = new SpriteBatch();
+		spritebatch.begin();
+		testroom.render(spritebatch);
+		spritebatch.draw(t, 100, 100);
+		//exp.render(spritebatch);
+		spritebatch.end();
+		spritebatch.dispose();
+	}//END render
+
+	@Override
+	public void resize(int arg0, int arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void resume() {
+		// TODO Auto-generated method stub
+		
+	}
+}//END class Game
+
+//EOF
