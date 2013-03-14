@@ -6,6 +6,7 @@ import game.objects.Enemy;
 import game.objects.GameObject;
 import game.objects.Player;
 import game.room.Room;
+import graphics.GraphicsManager;
 
 import java.util.Random;
 
@@ -20,12 +21,6 @@ public class Game implements ApplicationListener
 {
 	float i = 0, j = 16;
 	//TODO Testing
-	Texture testure;
-	Texture testure2;
-	Texture testure3;
-	Texture testure4;
-	Texture testure5;
-	Texture backtest;
 	Player testobj;
 	Room testroom;
 	int[] testcolliders = {0,1,2};
@@ -40,38 +35,21 @@ public class Game implements ApplicationListener
 	/* Controls */
 	private Controller controller = new Controller();
 	
+	/* GraphicsManager */
+	private GraphicsManager g;
+	
 	/* ApplicationListener */
 	@Override
 	public void create()
 	{
-		testure = new Texture(Gdx.files.internal("data/ness_walk.png"));
-		testure2 = new Texture(Gdx.files.internal("data/Sprite-example.png"));
-		testure3 = new Texture(Gdx.files.internal("data/greenball.png"));
-		testure4 = new Texture(Gdx.files.internal("data/Sprite-example.png"));
-		testure5 = new Texture(Gdx.files.internal("data/FritoLaySmall.png"));
-		backtest = new Texture(Gdx.files.internal("data/backgrounds/grass.png"));
-		t = new Texture(Gdx.files.internal("data/xp.png"));
-		testobj = new Player(0, 90, 90, 1, 10000, 32, 20, 0, -15, true, 60, true, 32, 50, testure, 32, 50);
+		g = new GraphicsManager();
+		testobj = new Player(0, 90, 90, 1, 10000, 32, 20, 0, -15, true, 60, true, 32, 50, g.ID(0), 32, 50);
 		gameIsOver = false;
-		testroom = new Room(backtest, testobj);
-		Device box = new Device(400,400,testure3, testroom, testure5);
+		testroom = new Room(g.ID(100), testobj);
+		Device box = new Device(400,400,g.ID(1), testroom, g.ID(2));
 		worldbox = box;
-		GameObject blocker = new GameObject(10,200,200,1,300,64,64,0,0,true,60,true,64,64,testure2,64,64, 1);
-		GameObject enemy1 = new Enemy(box,3, 500, 400, 1f, 300, 32, 32, 0, 0, true, 60, true, 32, 32, testure4, 32, 32);
-		GameObject enemy2 = new Enemy(box,3, 500, 500, 1f, 300, 32, 32, 0, 0, true, 60, true, 32, 32, testure4, 32, 32);
-		GameObject enemy3 = new Enemy(box,3, 500, 600, 1f, 300, 32, 32, 0, 0, true, 60, true, 32, 32, testure4, 32, 32);
-		GameObject enemy4 = new Enemy(box,3, 500, 300, 1f, 300, 32, 32, 0, 0, true, 60, true, 32, 32, testure4, 32, 32);
-		GameObject enemy5 = new Enemy(box,3, 500, 200, 1f, 300, 32, 32, 0, 0, true, 60, true, 32, 32, testure4, 32, 32);
-		gos = new GameOverState(backtest);
-		//exp = new Exp(box, testroom,  new Texture(Gdx.files.internal("data/xp.png")));
-		//testroom.add_object(exp);
+		gos = new GameOverState(g.ID(100));
 		testroom.add_object(box);
-
-		//testroom.add_object(enemy1);
-		//testroom.add_object(enemy2);
-		//testroom.add_object(enemy3);
-		//testroom.add_object(enemy4);
-		//testroom.add_object(enemy5);
 		
 		testroom.add_object(testobj);
 		
@@ -83,13 +61,7 @@ public class Game implements ApplicationListener
 	@Override
 	public void dispose()
 	{
-		// TODO Auto-generated method stub
-		testure.dispose();
-		testure2.dispose();
-		testure3.dispose();
-		testure4.dispose();
-		testure5.dispose();
-		backtest.dispose();
+		g.dispose();
 	}
 
 	@Override
@@ -105,7 +77,7 @@ public class Game implements ApplicationListener
 		float xSpawn = (top ? (side ? 0 : Gdx.graphics.getWidth()) : generator.nextInt(Gdx.graphics.getWidth()));
 		float ySpawn = (top ? generator.nextInt(Gdx.graphics.getHeight()) : (side ? 0 : Gdx.graphics.getHeight()));
 		GameObject enemy = new Enemy(worldbox,3, xSpawn, ySpawn, 1f, 300, 32, 32, 0, 0, 
-				true, 60, true, 32, 32, testure4, 32, 32);
+				true, 60, true, 32, 32, g.ID(3), 32, 32);
 		return enemy;
 	}
 	@Override
@@ -121,14 +93,12 @@ public class Game implements ApplicationListener
 			spritebatch.dispose();
 			if(!gameIsOver){
 				create();
-				System.out.println("gets here");
 			}
 			else{
 				return;
 			}
 			
 		}
-		System.out.println("and here");
 		/* Get DT */
 		float dt = Gdx.graphics.getDeltaTime();
 		time += dt;
@@ -152,7 +122,6 @@ public class Game implements ApplicationListener
 		SpriteBatch spritebatch = new SpriteBatch();
 		spritebatch.begin();
 		testroom.render(spritebatch);
-		spritebatch.draw(t, 100, 100);;
 		spritebatch.end();
 		spritebatch.dispose();
 	}//END render

@@ -15,8 +15,7 @@ public class OptionsScreen implements BaseState{
 	
 	public OptionsScreen(StateManager state){
 		this.state = state;
-		create();
-		
+		create();		
 	}
 
 	@Override
