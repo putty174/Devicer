@@ -86,13 +86,17 @@ public class Room implements Controllable
 	public boolean update(float dt)
 	{
 		monsterCount = objects.size() - 2;
-		boolean gameIsLost = false;
+		boolean gameIsLost = true;
 		
 		/* Spawn Objects */
 		Iterator<GameObject> iter = this.spawn.iterator();
 		while(iter.hasNext())
 		{
 			GameObject obj = iter.next();
+			if(obj.getID() == 2)
+			{
+				gameIsLost = false;
+			}//fi
 			this.objects.add(obj);
 			iter.remove();
 		}//elihw

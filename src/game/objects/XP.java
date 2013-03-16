@@ -19,8 +19,7 @@ public class XP extends GameObject
 				false, //Touchable
 				32, 32, //Draw width and height
 				sprites, //Spritesheet
-				16, 16, //srcwidth and height
-				10 //hp
+				64, 64 //srcwidth and height
 				);
 		
 		double dir = direction * Math.PI / 180;

@@ -28,14 +28,15 @@ public class Device extends GameObject {
 				true, //Touchable
 				64, 64, //Draw width and height
 				sprites, //Spritesheet
-				64, 64, //srcwidth and height
-				100 //hp
+				64, 64 //srcwidth and height
 				);
 		
 		this.exp_sprites = exp_sprites;
 		this.screenBound = true;
 		this.room = room;
-		this.timer = new GameTimer(3);
+		this.timer = new GameTimer(8);
+		this.health.max = 10;
+		this.health.current = 10;
 	}//END Device
 	
 	@Override
@@ -54,6 +55,10 @@ public class Device extends GameObject {
 	@Override
 	public void update(float dt, ArrayList<GameObject> objects)
 	{
+		if(this.health.current <= 0)
+		{
+			this.terminate();
+		}//fi
 		
 		float dir = (float)(360 * Math.random());
 		

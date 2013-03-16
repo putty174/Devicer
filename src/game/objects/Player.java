@@ -18,7 +18,6 @@ public class Player extends AnimatedObject
 	
 	/* Animation */
 	private static final int ANIMATION_IDLE = 0;
-	private static final int ANIMATION_MOVING = 1;
 	
 	//Facing Angle
 	private float facing_angle = 0;
@@ -63,19 +62,13 @@ public class Player extends AnimatedObject
 		this.movement.acceleation = 300;
 		this.attack.damage = 1;
 		this.attack.power = 500;
-		this.attack.range = 60;
+		this.attack.range = 80;
 		
 		/* Animations */
 		//Idle
 		for(int i = 0; i < 8; i++)
 		{
-			this.add_animation(0, i, 4, 5, true);
-		}//rof
-		
-		//Moving
-		for(int i = 0; i < 8; i++)
-		{
-			this.add_animation(0, i, 4, 10, true);
+			this.add_animation(i, 0, 1, 5, true);
 		}//rof
 		
 		this.momentum_collision(new Vector2(200,200));
@@ -96,10 +89,6 @@ public class Player extends AnimatedObject
 				this.heading_Y = y;
 				this.action_queue.clear();
 				this.action_queue.add_action(new Goto(x, y, this.movement));
-				if(this.animation_state != ANIMATION_MOVING)
-				{
-					this.directionBasedAnimation(ANIMATION_MOVING);
-				}//fi
 			}//fi
 		}//fi
 	}//END input_touch
@@ -116,16 +105,12 @@ public class Player extends AnimatedObject
 			switch (this.target.getID())
 			{
 				case 1: //Is the device
-					this.action_queue.add_action(new Push(this.target, this.movement, 500, direction, this.attack.range));
+					this.action_queue.add_action(new Push(this.target, this.movement, 400, direction, this.attack.range));
 					break;
 				default: //Enemy
 					this.action_queue.add_action(new Attack(this.target,this.movement, this.attack));
 					break;
 			}
-			if(this.animation_state != ANIMATION_MOVING)
-			{
-				this.directionBasedAnimation(ANIMATION_MOVING);
-			}//fi
 		}//fi
 	}
 	
@@ -179,16 +164,8 @@ public class Player extends AnimatedObject
 		{
 			change = false;
 		}//esle
-
 		
-		if(this.action_queue.get_actionID() == 0 && this.animation_state == ANIMATION_MOVING)
-		{
-			this.directionBasedAnimation(ANIMATION_IDLE);
-		}//fi
-		else if(this.action_queue.get_actionID() == 1 && change)
-		{
-			this.directionBasedAnimation(ANIMATION_MOVING);
-		}//fi esle
+		this.directionBasedAnimation(ANIMATION_IDLE);
 		
 		super.update(dt, objects);
 	}//END update

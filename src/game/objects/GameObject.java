@@ -79,7 +79,7 @@ public class GameObject
 	 * @param srcWidth the width of a sprite
 	 * @param srcHeight the height of a sprite
 	 */
-	public GameObject(int objectID, float posX, float posY, float mass, float friction, float hitWidth, float hitHeight, float hitX, float hitY, boolean isSolid, float touchRadius, boolean isTouchable, float drawWidth, float drawHeight, Texture sprites, int srcWidth, int srcHeight, int hp)
+	public GameObject(int objectID, float posX, float posY, float mass, float friction, float hitWidth, float hitHeight, float hitX, float hitY, boolean isSolid, float touchRadius, boolean isTouchable, float drawWidth, float drawHeight, Texture sprites, int srcWidth, int srcHeight)
 	{
 		/* ID */
 		this.objectID = objectID;
@@ -92,7 +92,6 @@ public class GameObject
 		this.mass = mass;
 		this.friction = friction;
 		//HP set here for now
-		this.setHp(hp);	
 
 		/* Collision */
 		this.hitWidth = hitWidth;
@@ -464,7 +463,7 @@ public class GameObject
 		return collision;
 	}//END collides
 	
-	private boolean isColliding(GameObject collider, Vector2 checkPos)
+	protected boolean isColliding(GameObject collider, Vector2 checkPos)
 	{
 		Rectangle self_rect = new Rectangle(checkPos.x - this.get_hitWidth()/2 + this.get_hitOffsetX(),
 											checkPos.y - this.get_hitHeight()/2 + this.get_hitOffsetY(),
