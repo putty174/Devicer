@@ -1,13 +1,13 @@
 package game;
 
 import game.controls.Controller;
+import game.draw.GraphicsManager;
 import game.object.spawner.Spawner;
 import game.objects.Device;
 import game.objects.Enemy;
 import game.objects.GameObject;
 import game.objects.Player;
 import game.room.Room;
-import graphics.GraphicsManager;
 
 import java.util.Random;
 
