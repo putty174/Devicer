@@ -45,6 +45,7 @@ public class Spawner
 	/* Spawn */
 	private void spawn()
 	{
+		/*
 		for(int i = 0; i < this.spawned_amount; i++)
 		{
 			boolean top = generator.nextBoolean();
@@ -59,6 +60,16 @@ public class Spawner
 			System.out.println("Spawn!!!");
 		}//rof
 		this.spawned_amount += 0.3;
+		*/
+		boolean top = generator.nextBoolean();
+		boolean side = generator.nextBoolean();
+		int randomX = (int)(generator.nextFloat() * 200);
+		int randomY = (int)(generator.nextFloat() * 200);
+		float xSpawn = (top ? (side ? -100-randomX : Gdx.graphics.getWidth()+100+randomX) : generator.nextInt(Gdx.graphics.getWidth())+100+randomX);
+		float ySpawn = (top ? generator.nextInt(Gdx.graphics.getHeight()+100+randomY) : (side ? -100-randomY : Gdx.graphics.getHeight())+100+randomY);
+		GameObject enemy = new Enemy(box,3, xSpawn, ySpawn, 1f, 300, 50, 50, 0, 0, 
+				true, 120, true, 70, 70, texture, 150, 150);
+		room.add_object(enemy);
 	}//END spawn
 	
 	

@@ -15,6 +15,7 @@ public class Player extends AnimatedObject
 {
 	/* Stats */
 	private AttackAttributes attack = new AttackAttributes();
+	private int XPCount = 0;
 	
 	/* Animation */
 	private static final int ANIMATION_IDLE = 0;
@@ -126,6 +127,7 @@ public class Player extends AnimatedObject
 				break;
 			case 2: //Collision with exp
 				collider.terminate();
+				XPCount ++;
 				break;
 		}//hctiws
 	}//END behavior_collision
@@ -175,6 +177,10 @@ public class Player extends AnimatedObject
 	{
 		
 	}//END update_animationState
+	
+	public int getXP(){
+		return XPCount;
+	}
 }//END class Player
 
 //EOF

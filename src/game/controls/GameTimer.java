@@ -112,4 +112,13 @@ public class GameTimer
 			this.isDone = true;
 		}//fi
 	}//END interval_time
+	
+	/**
+	 * Changes the interval time.
+	 * 
+	 * @param t The new time that it takes for the timer to complete.
+	 */
+	public void set_interval_time(float t){
+		this.interval_time = t;
+	}
 }//END GameTimer

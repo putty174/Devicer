@@ -8,8 +8,7 @@ public class Parser {
 	
 	public Parser(){
 		
-	}
-	
+	}	
 	
 	 public String[][] parseFile(File f){
 		 Scanner scan = null;
